@@ -1,1 +1,1 @@
-read me for repository
+read repository
