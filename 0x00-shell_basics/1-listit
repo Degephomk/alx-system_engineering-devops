@@ -1,2 +1,6 @@
 #!/bin/bash
+<<<<<<< HEAD
 0-current_working_directory README.md
+=======
+0-current_working_directory   README.md
+>>>>>>> c8ec39f2fa502cee98a4e34360959947907dd524
