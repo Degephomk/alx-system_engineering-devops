@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#a script that uses a nested loop for hours and minutes
+h=0
+while [ $h -le 12 ]
+do
+    echo "Hour: $h"
+    minutes=1
+    while [ $m -lt 60 ]
+    do
+	echo "$m"
+	((m++))
+    done
+    ((h++))
+done
