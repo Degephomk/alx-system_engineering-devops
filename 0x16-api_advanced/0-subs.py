@@ -3,8 +3,17 @@ import requests
 
 def number_of_subscribers(subreddit):
     """
-    Queries the Reddit API and returns the number of subscribers (not active users, total subscribers) for a given subreddit.
-    If an invalid subreddit is given, the function should return 0.
+    Returns the number of subscribers for a given subreddit.
+
+    Args:
+        subreddit (str): The name of the subreddit to query.
+
+    Returns:
+        int: The number of subscribers for the subreddit, or 0 if the subreddit is invalid.
+
+    Raises:
+        requests.exceptions.RequestException: If there is an error querying the Reddit API.
+
     """
     url = f"https://www.reddit.com/r/{subreddit}/about.json"
     headers = {'User-Agent': 'Mozilla/5.0'}
