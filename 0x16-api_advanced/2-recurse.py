@@ -1,47 +1,26 @@
 #!/usr/bin/python3
-"""parses the title of all hot articles, and prints a sorted count"""
+"""Queries and returns a list"""
 import requests
 
 
-def count_words(subreddit, word_list, instances={}, after="", count=0):
-    """Print all hot articles in sorted count."""
-    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
-    headers = {
-        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
-    }
-    params = {
-        "after": after,
-        "count": count,
-        "limit": 100
-    }
-    response = requests.get(url, headers=headers, params=params,
-                            allow_redirects=False)
+def recurse(subreddit, hot_list=[], after=None):
+    """Returns list of titles of hot articles"""
     try:
-        results = response.json()
-        if response.status_code == 404:
-            raise Exception
-    except Exception:
-        print("")
-        return
+        r = requests.get("https://www.reddit.com/r/{}/hot.json".
+                         format(subreddit),
+                         headers={"User-Agent": "custom"},
+                         params={"after": after},
+                         allow_redirects=False).json()
+    except:
+        return None
 
-    results = results.get("data")
-    after = results.get("after")
-    count += results.get("dist")
-    for c in results.get("children"):
-        title = c.get("data").get("title").lower().split()
-        for word in word_list:
-            if word.lower() in title:
-                times = len([t for t in title if t == word.lower()])
-                if instances.get(word) is None:
-                    instances[word] = times
-                else:
-                    instances[word] += times
-
-    if after is None:
-        if len(instances) == 0:
-            print("")
-            return
-        instances = sorted(instances.items(), key=lambda kv: (-kv[1], kv[0]))
-        [print("{}: {}".format(k, v)) for k, v in instances]
+    if ("data" in r and "children" in r.get("data")):
+        for i in r.get("data").get("children"):
+            hot_list.append(i.get("data").get("title"))
+        if "after" in r.get("data") and r.get("data").get("after"):
+            return recurse(subreddit, hot_list,
+                           r.get("data").get("after"))
+        else:
+            return hot_list
     else:
-        count_words(subreddit, word_list, instances, after, count)
+        return None
